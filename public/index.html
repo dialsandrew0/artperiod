@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+<title>ArtPeriod™ — Field Art Intelligence</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#1FB89A"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090C;--s:#101218;--s2:#171A22;--b:#23272F;--b2:#313742;
+  --ink:#E9E3D2;--m:#7E8794;--d:#373E48;
+  --verd:#1FB89A;--verd-dim:#0E7A66;--verd-glow:rgba(31,184,154,0.1);
+  --gold:#CBA94E;--gold-dim:#8A7030;--rose:#C56B7A;--red:#D9544D;
+  --fd:'Cormorant Garamond',serif;--fm:'DM Mono',monospace;--fb:'Inter',sans-serif;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);min-height:100vh}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 90px}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;border-bottom:1px solid var(--b)}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-mark{width:36px;height:36px;border-radius:7px;background:linear-gradient(135deg,var(--verd-dim),var(--verd));display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:20px;font-weight:600;color:var(--bg)}
+.brand-txt{font-family:var(--fd);font-size:21px;font-weight:600;letter-spacing:0.01em}
+.brand-txt span{color:var(--verd)}
+.nav-r{font-family:var(--fm);font-size:9px;color:var(--m);text-align:right;line-height:1.8;letter-spacing:0.05em}
+
+/* HERO */
+.hero{padding:36px 0 26px}
+.hero-eyebrow{font-family:var(--fm);font-size:10px;color:var(--verd);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--verd);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{font-family:var(--fd);font-size:clamp(32px,6vw,58px);font-weight:600;line-height:1.05;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--verd)}
+.hero p{font-size:14px;color:var(--m);line-height:1.7;max-width:560px;font-weight:300}
+
+/* MODE TABS */
+.mode-tabs{display:flex;gap:6px;margin:24px 0 18px;flex-wrap:wrap}
+.mode-tab{padding:9px 16px;background:var(--s);border:1px solid var(--b);border-radius:6px;font-family:var(--fm);font-size:10px;color:var(--m);letter-spacing:0.06em;cursor:pointer;transition:all 0.15s}
+.mode-tab:hover{border-color:var(--b2);color:var(--ink)}
+.mode-tab.active{background:var(--verd-glow);border-color:var(--verd-dim);color:var(--verd)}
+
+/* SCAN CARD */
+.scan-card{background:var(--s);border:1px solid var(--b);border-radius:8px;overflow:hidden;margin-bottom:16px}
+.card-bar{display:flex;align-items:center;gap:7px;padding:12px 16px;background:var(--s2);border-bottom:1px solid var(--b)}
+.dot{width:9px;height:9px;border-radius:50%}
+.card-lbl{font-family:var(--fm);font-size:10px;color:var(--m);margin-left:auto;letter-spacing:0.08em}
+.card-body{padding:20px}
+
+/* UPLOAD MULTI */
+.shots-hint{font-family:var(--fm);font-size:10px;color:var(--m);margin-bottom:12px;line-height:1.7;letter-spacing:0.03em}
+.shots-hint strong{color:var(--ink)}
+.upload-multi{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.up-slot{border:2px dashed var(--b2);border-radius:7px;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.up-slot:hover,.up-slot.over{border-color:var(--verd);background:var(--verd-glow)}
+.up-slot.filled{border-style:solid;border-color:var(--verd-dim);padding:6px}
+.up-slot .ph{display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+.up-slot.filled .ph{display:none}
+.up-icon{font-size:24px;opacity:0.6}
+.up-lbl{font-family:var(--fm);font-size:10px;color:var(--verd);letter-spacing:0.08em;font-weight:500}
+.up-sub{font-family:var(--fm);font-size:8px;color:var(--m);letter-spacing:0.04em;text-align:center;padding:0 8px}
+.up-img{width:100%;height:118px;object-fit:contain;border-radius:4px;display:none;background:var(--s2)}
+.up-slot.filled .up-img{display:block}
+.up-remove{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(8,9,12,0.8);border:none;color:var(--ink);font-size:13px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2}
+.up-slot.filled .up-remove{display:flex}
+
+.url-row{display:flex;gap:8px;margin-bottom:6px}
+.url-row input{flex:1;background:var(--s2);border:1px solid var(--b);border-radius:5px;padding:10px 12px;color:var(--ink);font-family:var(--fm);font-size:11px;outline:none}
+.url-row input:focus{border-color:var(--verd)}
+.url-row input::placeholder{color:var(--d)}
+.btn-load{background:var(--s2);border:1px solid var(--b2);border-radius:5px;padding:10px 16px;color:var(--ink);font-family:var(--fm);font-size:10px;cursor:pointer;white-space:nowrap;letter-spacing:0.06em}
+.btn-load:hover{border-color:var(--verd);color:var(--verd)}
+.paste-tip{font-family:var(--fm);font-size:9px;color:var(--m);letter-spacing:0.04em;margin-top:8px}
+.paste-tip strong{color:var(--ink)}
+
+/* DEEP SEARCH TOGGLE */
+.deep-toggle{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--s2);border:1px solid var(--b);border-radius:6px;margin-bottom:14px;cursor:pointer}
+.deep-toggle:hover{border-color:var(--b2)}
+.toggle-switch{width:38px;height:21px;background:var(--b2);border-radius:11px;position:relative;transition:background 0.2s;flex-shrink:0}
+.toggle-switch.on{background:var(--verd)}
+.toggle-knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:var(--ink);transition:left 0.2s}
+.toggle-switch.on .toggle-knob{left:19px}
+.toggle-info{flex:1}
+.toggle-title{font-size:13px;color:var(--ink);font-weight:500;margin-bottom:1px}
+.toggle-desc{font-size:11px;color:var(--m);line-height:1.4}
+
+.btn-go{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;background:var(--verd);color:var(--bg);border:none;border-radius:6px;font-family:var(--fm);font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.15s}
+.btn-go:hover:not([disabled]){background:#27D4B2}
+.btn-go[disabled]{opacity:0.4;cursor:not-allowed}
+
+.logbox{background:var(--s2);border-top:1px solid var(--b);padding:12px 16px;font-family:var(--fm);font-size:10px;line-height:2;color:var(--m);max-height:150px;overflow-y:auto;display:none}
+.logbox .ok{color:var(--verd)}.logbox .warn{color:var(--gold)}.logbox .err{color:var(--red)}
+.logbox .ts{color:var(--d);margin-right:8px}
+
+/* RESULTS */
+.results{margin-top:8px}
+.sec{font-family:var(--fm);font-size:9px;color:var(--m);letter-spacing:0.18em;text-transform:uppercase;padding:14px 0 9px;border-top:1px solid var(--b);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.sec::before{content:'';width:4px;height:4px;background:var(--verd);border-radius:50%;display:inline-block}
+
+.id-head{background:var(--s);border:1px solid var(--b);border-radius:8px;padding:24px 26px;margin-bottom:14px}
+.id-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.art-title{font-family:var(--fd);font-size:30px;font-weight:600;line-height:1.08;margin-bottom:5px}
+.art-artist{font-family:var(--fd);font-size:17px;font-style:italic;color:var(--m)}
+.conf-badge{padding:6px 14px;border-radius:3px;font-family:var(--fm);font-size:10px;letter-spacing:0.08em;white-space:nowrap}
+.conf-certain{background:var(--verd-glow);color:var(--verd);border:1px solid var(--verd-dim)}
+.conf-probable{background:rgba(203,169,78,0.1);color:var(--gold);border:1px solid var(--gold-dim)}
+.conf-uncertain{background:var(--s2);color:var(--m);border:1px solid var(--b2)}
+
+.val-strip{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b);border:1px solid var(--b);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.val-cell{background:var(--s);padding:16px 20px}
+.val-k{font-family:var(--fm);font-size:9px;color:var(--m);letter-spacing:0.1em;margin-bottom:5px}
+.val-v{font-family:var(--fm);font-size:20px;font-weight:500;color:var(--gold)}
+.val-sub{font-family:var(--fm);font-size:9px;color:var(--m);margin-top:3px}
+
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:1px;background:var(--b);border:1px solid var(--b);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.mc{background:var(--s);padding:12px 15px}
+.mk{font-family:var(--fm);font-size:9px;color:var(--m);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}
+.mv{font-size:13px;color:var(--ink);line-height:1.4}
+.mv.hl{color:var(--verd);font-weight:500}
+
+.txt{background:var(--s);border:1px solid var(--b);border-radius:8px;padding:17px 19px;font-size:13px;line-height:1.85;color:var(--m);margin-bottom:14px}
+.txt strong{color:var(--ink);font-weight:500}
+
+/* SEARCH FINDINGS */
+.findings{background:var(--s);border:1px solid var(--b);border-radius:8px;padding:17px 19px;font-size:13px;line-height:1.8;color:var(--m);margin-bottom:14px}
+.findings strong{color:var(--ink);font-weight:500}
+.findings a{color:var(--verd);text-decoration:none}
+.findings a:hover{text-decoration:underline}
+.source-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;margin:3px 4px 3px 0;background:var(--s2);border:1px solid var(--b);border-radius:3px;font-family:var(--fm);font-size:9px;color:var(--m);letter-spacing:0.04em}
+.source-chip.hit{border-color:var(--verd-dim);color:var(--verd)}
+
+.flag{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border-radius:6px;border:1px solid;margin-bottom:14px;font-family:var(--fm);font-size:10px;line-height:1.6}
+.flag-ok{border-color:var(--verd-dim);background:var(--verd-glow);color:var(--verd)}
+.flag-warn{border-color:rgba(217,84,77,0.4);background:rgba(217,84,77,0.06);color:var(--red)}
+.flag-unk{border-color:var(--b2);background:var(--s2);color:var(--m)}
+
+/* VENUES */
+.venue{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:var(--s);border:1px solid var(--b);border-radius:6px;margin-bottom:8px}
+.v-type{font-family:var(--fm);font-size:9px;color:var(--m);letter-spacing:0.07em;min-width:105px;margin-top:2px}
+.v-name{font-size:13px;color:var(--ink);font-weight:500;margin-bottom:2px}
+.v-why{font-size:11px;color:var(--m);line-height:1.5}
+.v-tier{display:inline-block;margin-top:4px;padding:1px 7px;font-family:var(--fm);font-size:8px;border-radius:2px;letter-spacing:0.06em}
+.vt-top{background:var(--verd-glow);color:var(--verd);border:1px solid var(--verd-dim)}
+.vt-good{background:rgba(203,169,78,0.08);color:var(--gold);border:1px solid rgba(203,169,78,0.25)}
+.vt-local{border:1px solid var(--b2);color:var(--m)}
+
+/* AUTH SPECIALISTS */
+.auth-list{background:var(--s);border:1px solid var(--b);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.auth-row{padding:13px 16px;border-bottom:1px solid var(--b)}
+.auth-row:last-child{border-bottom:none}
+.auth-name{font-size:13px;color:var(--ink);font-weight:500;margin-bottom:3px}
+.auth-detail{font-size:11px;color:var(--m);line-height:1.5}
+
+/* POST GENERATOR */
+.post-btn{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--s);border:1px solid var(--b2);border-radius:6px;cursor:pointer;margin-bottom:10px;transition:border-color 0.15s}
+.post-btn:hover{border-color:var(--gold)}
+.post-btn-l{font-family:var(--fm);font-size:9px;color:var(--gold);letter-spacing:0.1em;margin-bottom:2px}
+.post-btn-d{font-size:13px;color:var(--ink)}
+.post-out{margin-bottom:12px}
+.post-platform{background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:14px 16px;margin-bottom:8px}
+.post-platform-name{font-family:var(--fm);font-size:9px;color:var(--verd);letter-spacing:0.08em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.post-text{font-size:13px;line-height:1.7;color:var(--ink);white-space:pre-wrap}
+.copy-btn{margin-top:8px;padding:5px 12px;background:var(--s);border:1px solid var(--b2);border-radius:4px;color:var(--m);font-family:var(--fm);font-size:9px;cursor:pointer;letter-spacing:0.06em}
+.copy-btn:hover{border-color:var(--verd);color:var(--verd)}
+
+.actions-row{margin-top:16px;padding:13px 15px;background:var(--s);border:1px solid var(--b);border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.btn-reset{padding:9px 18px;background:var(--verd);color:var(--bg);border:none;border-radius:5px;font-family:var(--fm);font-size:10px;font-weight:500;letter-spacing:0.08em;cursor:pointer}
+
+.errbox{background:rgba(217,84,77,0.06);border:1px solid rgba(217,84,77,0.25);border-radius:6px;padding:14px 16px;color:var(--red);font-family:var(--fm);font-size:11px;line-height:1.8;margin:12px 0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 1s linear infinite;display:inline-block}
+
+.dbfoot{margin-top:48px;padding-top:20px;border-top:1px solid var(--b)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--s);border:1px solid var(--b);border-radius:3px;font-family:var(--fm);font-size:9px;color:var(--m);letter-spacing:0.04em}
+.disclaimer{margin-top:20px;font-size:11px;color:var(--m);line-height:1.7}
+.disclaimer strong{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="nav">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <div class="brand-txt">Art<span>Period</span>™</div>
+  </div>
+  <div class="nav-r">FIELD ART INTELLIGENCE<br>IDENTIFY · VALUE · AUTHENTICATE · SELL</div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">DEEP RESEARCH ENGINE ONLINE</div>
+  <h1>Every piece has a<br><em>story and a price.</em></h1>
+  <p>Point it at any artwork — a signed oil, an unsigned regional landscape, a print, a sculpture, a piece you found at an estate sale and can't place. ArtPeriod identifies it, researches it across art databases and auction records, tells you what it's worth, where to authenticate it, and exactly where to sell it.</p>
+</div>
+
+<div class="mode-tabs">
+  <div class="mode-tab active" data-mode="full">🔍 FULL ANALYSIS</div>
+  <div class="mode-tab" data-mode="quick">⚡ QUICK ID</div>
+  <div class="mode-tab" data-mode="value">💰 VALUE FOCUS</div>
+</div>
+
+<div class="scan-card">
+  <div class="card-bar">
+    <div class="dot" style="background:#D9544D"></div>
+    <div class="dot" style="background:#CBA94E"></div>
+    <div class="dot" style="background:#1FB89A"></div>
+    <div class="card-lbl">ARTPERIOD // ANALYSIS TERMINAL</div>
+  </div>
+  <div class="card-body">
+
+    <div class="shots-hint"><strong>Best results:</strong> the full piece straight-on, plus close-ups of the signature, any labels or stamps on the back, and the frame if notable. More angles = deeper research.</div>
+
+    <div class="upload-multi" id="uploadMulti"></div>
+
+    <div class="url-row">
+      <input type="url" id="urlIn" placeholder="or paste an image URL..."/>
+      <button class="btn-load" onclick="loadUrl()">LOAD</button>
+    </div>
+    <div class="paste-tip">Paste from clipboard with <strong>Ctrl+V</strong> · drag &amp; drop · or tap a slot to browse</div>
+
+  </div>
+
+  <div style="padding:0 20px 20px">
+    <div class="deep-toggle" id="deepToggle">
+      <div class="toggle-switch on" id="toggleSwitch"><div class="toggle-knob"></div></div>
+      <div class="toggle-info">
+        <div class="toggle-title">Deep web research</div>
+        <div class="toggle-desc">Search live auction records, museum databases, and stolen-art registries. Slower but far more thorough.</div>
+      </div>
+    </div>
+
+    <button class="btn-go" id="goBtn" onclick="analyze()">🔍 RUN FULL ANALYSIS</button>
+  </div>
+
+  <div class="logbox" id="logbox"></div>
+</div>
+
+<div id="errBox"></div>
+<div id="results" class="results"></div>
+
+<div class="dbfoot">
+  <div class="sec">RESEARCH SOURCES</div>
+  <div class="chips" id="chips"></div>
+  <div class="disclaimer">
+    <strong>How it works:</strong> ArtPeriod uses AI vision to identify the work, then searches across public museum collections (Met, Smithsonian, Art Institute, Rijksmuseum), auction-record aggregators, artist databases, and the FBI/INTERPOL stolen-art registries. <strong>Values are research-based estimates, not appraisals.</strong> For anything you intend to insure, sell at high value, or authenticate, use the recommended specialists.
+  </div>
+</div>
+
+</div>
+
+<script>
+const SOURCES = [
+  ['Met Museum','live'],['Smithsonian','live'],['Art Institute Chicago','live'],
+  ['Rijksmuseum','live'],['Wikidata / Getty','live'],['Auction Records','web'],
+  ['FBI Art Crime','web'],['INTERPOL Stolen Art','web'],['Artist Signature DBs','web'],
+  ['FindArtInfo','web'],['Invaluable / LiveAuctioneers','web']
+];
+const chipsEl = document.getElementById('chips');
+SOURCES.forEach(([n,t]) => {
+  const c = document.createElement('span');
+  c.className = 'chip';
+  const col = t==='live' ? 'var(--verd)' : 'var(--gold)';
+  c.innerHTML = `<span style="color:${col};font-size:7px">●</span>${n.toUpperCase()}`;
+  chipsEl.appendChild(c);
+});
+
+// ── STATE ────────────────────────────────────────────────
+let images = [];  // {b64, src, label}
+let deepSearch = true;
+let mode = 'full';
+let currentArt = null;
+
+const SLOT_DEFS = [
+  { label: 'FULL PIECE', sub: 'STRAIGHT ON' },
+  { label: 'SIGNATURE', sub: 'CLOSE-UP' },
+  { label: 'BACK / LABELS', sub: 'STAMPS · TAGS' },
+  { label: 'DETAIL', sub: 'ANY EXTRA' }
+];
+
+// ── BUILD UPLOAD SLOTS ───────────────────────────────────
+const uploadMulti = document.getElementById('uploadMulti');
+SLOT_DEFS.forEach((def, idx) => {
+  const slot = document.createElement('div');
+  slot.className = 'up-slot';
+  slot.dataset.idx = idx;
+  slot.innerHTML = `
+    <div class="ph">
+      <div class="up-icon">${idx===0?'🖼️':idx===1?'✍️':idx===2?'🏷️':'🔎'}</div>
+      <div class="up-lbl">${def.label}</div>
+      <div class="up-sub">${def.sub}</div>
+    </div>
+    <img class="up-img" src="" alt="${def.label}"/>
+    <button class="up-remove" title="Remove">×</button>`;
+  uploadMulti.appendChild(slot);
+
+  const removeBtn = slot.querySelector('.up-remove');
+  const imgEl = slot.querySelector('.up-img');
+
+  function pick() {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'image/*';
+    input.style.cssText = 'position:fixed;left:-9999px';
+    document.body.appendChild(input);
+    input.onchange = async e => {
+      const f = e.target.files[0];
+      document.body.removeChild(input);
+      if (!f) return;
+      const { b64, src } = await compress(f);
+      images[idx] = { b64, src, label: def.label };
+      imgEl.src = src;
+      slot.classList.add('filled');
+    };
+    input.click();
+  }
+  slot.onclick = e => { if (e.target === removeBtn) return; pick(); };
+  removeBtn.onclick = e => {
+    e.stopPropagation();
+    images[idx] = null;
+    imgEl.src = '';
+    slot.classList.remove('filled');
+  };
+  slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('over'); });
+  slot.addEventListener('dragleave', () => slot.classList.remove('over'));
+  slot.addEventListener('drop', async e => {
+    e.preventDefault(); slot.classList.remove('over');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('image/')) {
+      const { b64, src } = await compress(f);
+      images[idx] = { b64, src, label: def.label };
+      imgEl.src = src;
+      slot.classList.add('filled');
+    }
+  });
+});
+
+// ── PASTE → first empty slot ─────────────────────────────
+document.addEventListener('paste', async e => {
+  for (const item of (e.clipboardData?.items || [])) {
+    if (item.type.startsWith('image/')) {
+      const f = item.getAsFile();
+      const { b64, src } = await compress(f);
+      const idx = SLOT_DEFS.findIndex((_, i) => !images[i]);
+      const slotIdx = idx === -1 ? 0 : idx;
+      images[slotIdx] = { b64, src, label: SLOT_DEFS[slotIdx].label };
+      const slot = uploadMulti.children[slotIdx];
+      slot.querySelector('.up-img').src = src;
+      slot.classList.add('filled');
+      break;
+    }
+  }
+});
+
+// ── COMPRESS ─────────────────────────────────────────────
+async function compress(file) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const MAX = 1300;
+      let w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      const d = c.toDataURL('image/jpeg', 0.86);
+      resolve({ b64: d.split(',')[1], src: d });
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      const r = new FileReader();
+      r.onload = e => resolve({ b64: e.target.result.split(',')[1], src: e.target.result });
+      r.readAsDataURL(file);
+    };
+    img.src = url;
+  });
+}
+
+function loadUrl() {
+  const u = document.getElementById('urlIn').value.trim();
+  if (!u) return;
+  images[0] = { url: u, src: u, label: 'FULL PIECE' };
+  const slot = uploadMulti.children[0];
+  slot.querySelector('.up-img').src = u;
+  slot.classList.add('filled');
+}
+
+// ── MODE TABS ────────────────────────────────────────────
+document.querySelectorAll('.mode-tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    mode = tab.dataset.mode;
+    const btn = document.getElementById('goBtn');
+    btn.innerHTML = mode==='quick' ? '⚡ QUICK IDENTIFY' : mode==='value' ? '💰 VALUE THIS PIECE' : '🔍 RUN FULL ANALYSIS';
+  };
+});
+
+// ── DEEP TOGGLE ──────────────────────────────────────────
+document.getElementById('deepToggle').onclick = () => {
+  deepSearch = !deepSearch;
+  document.getElementById('toggleSwitch').classList.toggle('on', deepSearch);
+};
+
+// ── LOG ──────────────────────────────────────────────────
+function log(msg, cls) {
+  const box = document.getElementById('logbox');
+  box.style.display = 'block';
+  const ts = new Date().toISOString().substr(11, 8);
+  box.innerHTML += `<span><span class="ts">[${ts}]</span><span class="${cls||''}">${msg}</span></span>\n`;
+  box.scrollTop = box.scrollHeight;
+}
+
+// ── PROMPT BUILDER ───────────────────────────────────────
+function buildPrompt() {
+  const depth = mode==='quick'
+    ? 'Provide a focused identification. Skip deep market analysis.'
+    : mode==='value'
+    ? 'Focus heavily on valuation, comparable sales, and resale strategy.'
+    : 'Provide complete analysis: identification, research, valuation, authentication path, and resale routing.';
+
+  const searchInstr = deepSearch
+    ? `\n\nIMPORTANT: Use your web_search tool. Search for:
+- The artist name + "auction results" or "sold price" for real comparable sales
+- The artist name + biography/dates to confirm attribution
+- site:metmuseum.org, site:artic.edu, or other museum sites if the work might be catalogued
+- The title or subject if it appears to be a known work
+- Whether the artist or work appears in any stolen-art context
+Cite what you actually find with specific numbers and sources.`
+    : '';
+
+  return `You are ArtPeriod — a master art identification and appraisal engine combining the knowledge of a museum curator, an auction-house specialist, and an estate appraiser. You are analyzing photographs of an artwork for someone in the field (estate sale, flea market, thrift store, inherited piece).
+
+${depth}${searchInstr}
+
+Be expert and HONEST. Estate finds are usually decorative or by minor/unknown artists — say so plainly when true. Reserve high values for work that genuinely warrants it. Never inflate.
+
+Return ONLY valid JSON:
+{
+  "title": "title or descriptive best-guess",
+  "artist": "full artist name or 'Unknown / Unsigned'",
+  "artist_search": "clean artist name for searching, or empty if unknown",
+  "year": "year or circa range",
+  "period": "art period",
+  "movement": "art movement or school",
+  "medium": "medium and support (e.g. Oil on canvas)",
+  "origin": "country / region of origin",
+  "subject": "what is depicted",
+  "signature": "describe any signature, monogram, stamp, or 'Not visible / Unsigned'",
+  "labels_marks": "any gallery labels, stamps, inscriptions, numbers on front or back",
+  "attribution_confidence": "certain / probable / possible / uncertain",
+  "condition": "specific visible condition: craquelure, foxing, tears, fading, restoration, frame condition — or 'Cannot fully assess from photos'",
+  "estimated_value_low": 100,
+  "estimated_value_high": 600,
+  "value_confidence": "low / medium / high",
+  "value_basis": "Honest explanation. Cite real comparable sales/auction results if found via search. State plainly if the artist has no established secondary market.",
+  "comparable_sales": "specific comparable sales found, with prices and sources — or 'No direct comps found'",
+  "research_findings": "Summary of what was found searching databases and auction records. Reference specific sources. If deep search was used, this should be substantive.",
+  "museum_holdings": "whether this artist/work appears in any museum collections found",
+  "stolen_art_risk": "low / medium / high",
+  "stolen_art_note": "provenance risk assessment",
+  "authentication_path": [
+    {"name": "specialist type or organization", "detail": "what they do and when you'd need them"},
+    {"name": "second option", "detail": "detail"}
+  ],
+  "sell_venues": [
+    {"type": "Auction House", "name": "specific house e.g. Heritage, Bonhams, regional", "reason": "why right for this piece", "tier": "top"},
+    {"type": "Online Platform", "name": "e.g. Invaluable, Artsy, eBay Art, 1stDibs", "reason": "reason", "tier": "good"},
+    {"type": "Local / Direct", "name": "e.g. local auction, antique dealer, consignment", "reason": "reason", "tier": "local"}
+  ],
+  "expert_summary": "3-4 honest sentences: what this is, its quality and significance, and the realistic bottom line. Talk like a straight-shooting appraiser.",
+  "next_steps": "Concrete next actions for the owner in priority order",
+  "tags": ["tag1","tag2","tag3","tag4"]
+}`;
+}
+
+// ── ANALYZE ──────────────────────────────────────────────
+async function analyze() {
+  const validImages = images.filter(Boolean);
+  if (validImages.length === 0) {
+    document.getElementById('errBox').innerHTML = '<div class="errbox">⚠ Add at least one photo of the piece.</div>';
+    return;
+  }
+
+  const btn = document.getElementById('goBtn');
+  btn.setAttribute('disabled', '');
+  btn.innerHTML = '<span class="spin">⟳</span>&nbsp;ANALYZING...';
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('errBox').innerHTML = '';
+
+  log(`Starting ${mode} analysis with ${validImages.length} image(s)...`);
+  if (deepSearch) log('Deep web research enabled — searching databases & auctions', 'warn');
+
+  // Build content array with all images
+  const content = [];
+  validImages.forEach(im => {
+    content.push({ type: 'text', text: `${im.label} image:` });
+    if (im.b64) content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: im.b64 } });
+    else content.push({ type: 'image', source: { type: 'url', url: im.url } });
+  });
+  content.push({ type: 'text', text: buildPrompt() });
+
+  const body = {
+    model: 'claude-sonnet-4-6',
+    max_tokens: 4000,
+    messages: [{ role: 'user', content }]
+  };
+  if (deepSearch) {
+    body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+  }
+
+  try {
+    const resp = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    log(`Server responded: ${resp.status}`);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+
+    const textBlocks = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    const searches = (data.content || []).filter(b => b.type === 'server_tool_use' || b.type === 'tool_use').length;
+    if (searches) log(`Web searches performed: ${searches}`, 'ok');
+
+    let art = null;
+    let jsonStr = '';
+    const match = textBlocks.match(/\{[\s\S]*\}/);
+    if (match) jsonStr = match[0];
+    else throw new Error('No analysis returned. Try again.');
+
+    // Try straight parse first
+    try {
+      art = JSON.parse(jsonStr);
+    } catch (e1) {
+      // Response was likely truncated — attempt repair
+      log('Response was long — repairing...', 'warn');
+      let repaired = jsonStr;
+      // Remove any trailing incomplete element after the last complete one
+      repaired = repaired.replace(/,\s*$/, '');
+      // Close any unclosed array/object by counting brackets
+      const opens = (repaired.match(/\{/g) || []).length;
+      const closes = (repaired.match(/\}/g) || []).length;
+      const aOpens = (repaired.match(/\[/g) || []).length;
+      const aCloses = (repaired.match(/\]/g) || []).length;
+      // Trim to last complete field, then close braces
+      repaired = repaired.replace(/,\s*"[^"]*"\s*:\s*[^,}\]]*$/, '');
+      for (let i = 0; i < (aOpens - aCloses); i++) repaired += ']';
+      for (let i = 0; i < (opens - closes); i++) repaired += '}';
+      try {
+        art = JSON.parse(repaired);
+        log('Repaired successfully', 'ok');
+      } catch (e2) {
+        throw new Error('Response was incomplete. Try again, or turn off Deep Research for a shorter result.');
+      }
+    }
+    currentArt = art;
+    log(`Identified: ${art.title} — ${art.artist}`, 'ok');
+    render(art);
+
+  } catch (err) {
+    log('FAILED: ' + err.message, 'err');
+    document.getElementById('errBox').innerHTML = `<div class="errbox">⚠ ${err.message}</div>`;
+  }
+
+  btn.removeAttribute('disabled');
+  btn.innerHTML = '🔄 RE-ANALYZE';
+}
+
+// ── RENDER ───────────────────────────────────────────────
+function render(art) {
+  const lo = art.estimated_value_low || 0;
+  const hi = art.estimated_value_high || 0;
+  const vs = (lo || hi) ? `$${lo.toLocaleString()} – $${hi.toLocaleString()}` : 'No market data';
+  const confClass = art.attribution_confidence === 'certain' ? 'conf-certain'
+    : art.attribution_confidence === 'probable' ? 'conf-probable' : 'conf-uncertain';
+
+  const risk = art.stolen_art_risk || 'unknown';
+  const flagClass = risk === 'low' ? 'flag-ok' : risk === 'high' ? 'flag-warn' : 'flag-unk';
+  const flagIcon = risk === 'low' ? '✓' : risk === 'high' ? '⚠' : '?';
+
+  const venues = (art.sell_venues || []).map(v => `
+    <div class="venue">
+      <span class="v-type">${(v.type || '').toUpperCase()}</span>
+      <div>
+        <div class="v-name">${v.name}</div>
+        <div class="v-why">${v.reason}</div>
+        <span class="v-tier ${v.tier==='top'?'vt-top':v.tier==='good'?'vt-good':'vt-local'}">${v.tier==='top'?'TOP CHOICE':v.tier==='good'?'GOOD OPTION':'LOCAL / DIRECT'}</span>
+      </div>
+    </div>`).join('');
+
+  const authPath = (art.authentication_path || []).map(a => `
+    <div class="auth-row">
+      <div class="auth-name">${a.name}</div>
+      <div class="auth-detail">${a.detail}</div>
+    </div>`).join('');
+
+  const tags = (art.tags || []).map(t =>
+    `<span style="padding:3px 9px;background:var(--s);border:1px solid var(--b);border-radius:2px;font-family:var(--fm);font-size:9px;color:var(--m)">${t.toUpperCase()}</span>`
+  ).join('');
+
+  document.getElementById('results').innerHTML = `
+    <div class="sec">Identification</div>
+    <div class="id-head">
+      <div class="id-top">
+        <div>
+          <div class="art-title">${art.title || 'Untitled'}</div>
+          <div class="art-artist">${art.artist || 'Unknown'}${art.year ? ', ' + art.year : ''}</div>
+        </div>
+        <div class="conf-badge ${confClass}">${(art.attribution_confidence || 'uncertain').toUpperCase()}</div>
+      </div>
+    </div>
+
+    <div class="val-strip">
+      <div class="val-cell">
+        <div class="val-k">ESTIMATED VALUE</div>
+        <div class="val-v">${vs}</div>
+        <div class="val-sub">${(art.value_confidence || 'low').toUpperCase()} CONFIDENCE</div>
+      </div>
+      <div class="val-cell">
+        <div class="val-k">ATTRIBUTION</div>
+        <div class="val-v" style="color:var(--verd);font-size:16px">${(art.attribution_confidence || 'uncertain').toUpperCase()}</div>
+        <div class="val-sub">${art.signature && art.signature !== 'Not visible / Unsigned' ? 'SIGNED' : 'UNSIGNED'}</div>
+      </div>
+    </div>
+
+    <div class="mgrid">
+      <div class="mc"><div class="mk">Period</div><div class="mv">${art.period || '—'}</div></div>
+      <div class="mc"><div class="mk">Movement</div><div class="mv">${art.movement || '—'}</div></div>
+      <div class="mc"><div class="mk">Medium</div><div class="mv">${art.medium || '—'}</div></div>
+      <div class="mc"><div class="mk">Origin</div><div class="mv">${art.origin || '—'}</div></div>
+      <div class="mc"><div class="mk">Subject</div><div class="mv">${art.subject || '—'}</div></div>
+      <div class="mc"><div class="mk">Signature</div><div class="mv ${art.signature && art.signature!=='Not visible / Unsigned'?'hl':''}">${art.signature || '—'}</div></div>
+      ${art.labels_marks && art.labels_marks !== 'None' ? `<div class="mc"><div class="mk">Labels / Marks</div><div class="mv hl">${art.labels_marks}</div></div>` : ''}
+      <div class="mc"><div class="mk">Condition</div><div class="mv">${art.condition || '—'}</div></div>
+    </div>
+
+    <div class="flag ${flagClass}">
+      <span style="min-width:70px;font-weight:500">${flagIcon} ${risk.toUpperCase()} RISK</span>
+      <span>${art.stolen_art_note || 'Verify provenance before high-value sale.'}</span>
+    </div>
+
+    <div class="sec">Expert Analysis</div>
+    <div class="txt">
+      ${(art.expert_summary || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
+      ${art.value_basis ? `<br><br><strong>Value basis:</strong> ${art.value_basis}` : ''}
+      ${art.comparable_sales && art.comparable_sales !== 'No direct comps found' ? `<br><br><strong>Comparable sales:</strong> ${art.comparable_sales}` : ''}
+    </div>
+
+    ${art.research_findings ? `
+    <div class="sec">Research Findings</div>
+    <div class="findings">
+      ${art.research_findings.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
+      ${art.museum_holdings && art.museum_holdings !== 'None' ? `<br><br><strong>Museum holdings:</strong> ${art.museum_holdings}` : ''}
+    </div>` : ''}
+
+    ${authPath ? `
+    <div class="sec">Authentication Path</div>
+    <div class="auth-list">${authPath}</div>` : ''}
+
+    <div class="sec">Where To Sell</div>
+    ${venues}
+
+    <div class="sec">Create Your Listing</div>
+    <div class="post-btn" id="postBtn">
+      <div>
+        <div class="post-btn-l">GENERATE SALE POSTS</div>
+        <div class="post-btn-d">Ready-to-paste listings for eBay, Facebook, Craigslist & more →</div>
+      </div>
+      <div style="color:var(--gold);font-size:18px">→</div>
+    </div>
+    <div class="post-out" id="postOut"></div>
+
+    <div class="actions-row">
+      <span style="font-size:13px;color:var(--m)">${art.next_steps ? '<strong style="color:var(--ink)">Next:</strong> ' + art.next_steps : 'Analyze another piece'}</span>
+      <button class="btn-reset" onclick="resetAll()">↩ NEW PIECE</button>
+    </div>
+
+    ${tags ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:14px">${tags}</div>` : ''}
+  `;
+
+  document.getElementById('postBtn').onclick = generatePosts;
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── POST GENERATOR ───────────────────────────────────────
+async function generatePosts() {
+  const art = currentArt;
+  const btn = document.getElementById('postBtn');
+  btn.querySelector('.post-btn-d').textContent = 'Generating platform posts...';
+
+  const lo = art.estimated_value_low || 0, hi = art.estimated_value_high || 0;
+  const prompt = `Create resale listings for this artwork across platforms. Return ONLY valid JSON:
+{
+  "ebay": {"title": "eBay title under 80 chars, keyword-optimized", "body": "full eBay description, 2-3 paragraphs, factual"},
+  "facebook": {"body": "Facebook Marketplace post — friendly, concise, with key details and price"},
+  "craigslist": {"title": "Craigslist title", "body": "Craigslist body — straightforward"},
+  "instagram": {"body": "Instagram caption with relevant hashtags for art resale"},
+  "suggested_price": "recommended asking price with brief reasoning"
+}
+
+Artwork:
+Title: ${art.title}
+Artist: ${art.artist}, ${art.year || ''}
+Medium: ${art.medium || ''}
+Period: ${art.period || ''}
+Subject: ${art.subject || ''}
+Condition: ${art.condition || ''}
+Estimated value: $${lo}–$${hi}
+
+Be factual — no false attribution claims. Price to sell.`;
+
+  try {
+    const resp = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await resp.json();
+    const raw = (data.content || []).map(b => b.text || '').join('');
+    const posts = JSON.parse(raw.match(/\{[\s\S]*\}/)[0]);
+
+    const platforms = [
+      { key: 'ebay', name: 'EBAY', icon: '🛒', hasTitle: true },
+      { key: 'facebook', name: 'FACEBOOK MARKETPLACE', icon: '📘', hasTitle: false },
+      { key: 'craigslist', name: 'CRAIGSLIST', icon: '📋', hasTitle: true },
+      { key: 'instagram', name: 'INSTAGRAM', icon: '📷', hasTitle: false }
+    ];
+
+    let html = '';
+    if (posts.suggested_price) {
+      html += `<div class="post-platform" style="border-color:var(--gold-dim)"><div class="post-platform-name" style="color:var(--gold)">💰 SUGGESTED PRICE</div><div class="post-text">${posts.suggested_price}</div></div>`;
+    }
+    platforms.forEach(p => {
+      const post = posts[p.key];
+      if (!post) return;
+      const full = (post.title ? post.title + '\n\n' : '') + (post.body || '');
+      html += `
+        <div class="post-platform">
+          <div class="post-platform-name">${p.icon} ${p.name}</div>
+          ${post.title ? `<div class="post-text" style="font-weight:500;margin-bottom:6px">${post.title}</div>` : ''}
+          <div class="post-text">${post.body || ''}</div>
+          <button class="copy-btn" onclick="copyText(this, ${JSON.stringify(full).replace(/"/g, '&quot;')})">COPY</button>
+        </div>`;
+    });
+    document.getElementById('postOut').innerHTML = html;
+    btn.querySelector('.post-btn-d').textContent = 'Posts generated below — copy and paste to each platform';
+  } catch (e) {
+    btn.querySelector('.post-btn-d').textContent = 'Error generating posts — try again';
+  }
+}
+
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ COPIED';
+    setTimeout(() => btn.textContent = 'COPY', 1500);
+  });
+}
+
+// ── RESET ────────────────────────────────────────────────
+function resetAll() {
+  images = [];
+  currentArt = null;
+  Array.from(uploadMulti.children).forEach(slot => {
+    slot.classList.remove('filled');
+    slot.querySelector('.up-img').src = '';
+  });
+  document.getElementById('urlIn').value = '';
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('errBox').innerHTML = '';
+  document.getElementById('logbox').innerHTML = '';
+  document.getElementById('logbox').style.display = 'none';
+  const btn = document.getElementById('goBtn');
+  btn.removeAttribute('disabled');
+  btn.innerHTML = mode==='quick' ? '⚡ QUICK IDENTIFY' : mode==='value' ? '💰 VALUE THIS PIECE' : '🔍 RUN FULL ANALYSIS';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

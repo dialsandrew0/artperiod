@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ArtPeriod™ — Know What Your Art Is Worth</title>
+<meta name="description" content="Point your phone at any artwork and instantly know what it is, what it's worth, and where to sell it. Built for estate sales, flea markets, and treasure hunters."/>
+<meta property="og:title" content="ArtPeriod™ — Field Art Intelligence"/>
+<meta property="og:description" content="Identify, value, and sell any artwork. Built for treasure hunters."/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090C;--s:#101218;--s2:#171A22;--b:#23272F;--b2:#313742;
+  --ink:#E9E3D2;--m:#7E8794;--verd:#1FB89A;--verd-dim:#0E7A66;--gold:#CBA94E;
+  --fd:'Cormorant Garamond',serif;--fm:'DM Mono',monospace;--fb:'Inter',sans-serif;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.6}
+.container{max-width:1000px;margin:0 auto;padding:0 24px}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:24px;max-width:1000px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--fd);font-size:22px;font-weight:600}
+.brand-mark{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,var(--verd-dim),var(--verd));display:flex;align-items:center;justify-content:center;color:var(--bg);font-weight:600}
+.brand span{color:var(--verd)}
+.nav-cta{padding:10px 20px;background:var(--verd);color:var(--bg);border-radius:6px;font-family:var(--fm);font-size:11px;font-weight:500;letter-spacing:0.08em;text-decoration:none}
+
+/* HERO */
+.hero{text-align:center;padding:70px 24px 60px;max-width:780px;margin:0 auto}
+.hero-eyebrow{font-family:var(--fm);font-size:11px;color:var(--verd);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:24px}
+.hero h1{font-family:var(--fd);font-size:clamp(42px,8vw,76px);font-weight:600;line-height:1.04;margin-bottom:24px}
+.hero h1 em{font-style:italic;color:var(--verd)}
+.hero-sub{font-size:18px;color:var(--m);font-weight:300;max-width:600px;margin:0 auto 36px;line-height:1.7}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;background:var(--verd);color:var(--bg);border-radius:8px;font-family:var(--fm);font-size:13px;font-weight:500;letter-spacing:0.1em;text-decoration:none;transition:background 0.15s}
+.hero-cta:hover{background:#27D4B2}
+.hero-note{margin-top:16px;font-family:var(--fm);font-size:11px;color:var(--m)}
+
+/* DEMO STRIP */
+.demo-strip{display:flex;justify-content:center;gap:1px;background:var(--b);border:1px solid var(--b);border-radius:10px;overflow:hidden;max-width:760px;margin:0 auto 80px}
+.demo-step{flex:1;background:var(--s);padding:28px 20px;text-align:center}
+.demo-num{font-family:var(--fm);font-size:11px;color:var(--verd);letter-spacing:0.1em;margin-bottom:10px}
+.demo-icon{font-size:32px;margin-bottom:12px}
+.demo-title{font-size:15px;font-weight:500;margin-bottom:6px}
+.demo-desc{font-size:12px;color:var(--m);line-height:1.5}
+
+/* PROBLEM */
+.section{padding:60px 0;border-top:1px solid var(--b)}
+.section-eyebrow{font-family:var(--fm);font-size:11px;color:var(--verd);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:16px;text-align:center}
+.section h2{font-family:var(--fd);font-size:clamp(32px,5vw,48px);font-weight:600;text-align:center;line-height:1.1;margin-bottom:20px}
+.section-lead{font-size:16px;color:var(--m);text-align:center;max-width:620px;margin:0 auto 48px;font-weight:300;line-height:1.7}
+
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.feature{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:28px 26px}
+.feature-icon{font-size:28px;margin-bottom:14px}
+.feature h3{font-family:var(--fd);font-size:22px;font-weight:600;margin-bottom:8px}
+.feature p{font-size:14px;color:var(--m);line-height:1.7}
+
+/* WHO */
+.who-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:8px}
+.who{background:var(--s);border:1px solid var(--b);border-radius:8px;padding:20px;text-align:center}
+.who-icon{font-size:26px;margin-bottom:10px}
+.who-name{font-size:14px;font-weight:500;margin-bottom:4px}
+.who-desc{font-size:12px;color:var(--m);line-height:1.5}
+
+/* COMPARISON */
+.compare{background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;max-width:680px;margin:0 auto}
+.compare-row{display:grid;grid-template-columns:2fr 1fr 1fr;border-bottom:1px solid var(--b)}
+.compare-row:last-child{border-bottom:none}
+.compare-row.head{background:var(--s2)}
+.compare-cell{padding:14px 18px;font-size:13px;display:flex;align-items:center}
+.compare-cell.feat{color:var(--m)}
+.compare-row.head .compare-cell{font-family:var(--fm);font-size:10px;letter-spacing:0.06em;color:var(--ink);font-weight:500}
+.compare-cell.us{color:var(--verd);justify-content:center;font-weight:500}
+.compare-cell.them{color:var(--m);justify-content:center}
+
+/* CTA FINAL */
+.cta-final{text-align:center;padding:80px 24px}
+.cta-final h2{font-family:var(--fd);font-size:clamp(36px,6vw,56px);font-weight:600;margin-bottom:20px;line-height:1.1}
+.cta-final h2 em{font-style:italic;color:var(--verd)}
+.cta-final p{font-size:16px;color:var(--m);margin-bottom:32px;font-weight:300}
+
+footer{border-top:1px solid var(--b);padding:40px 24px;text-align:center}
+.footer-brand{font-family:var(--fd);font-size:18px;font-weight:600;margin-bottom:8px}
+.footer-brand span{color:var(--verd)}
+.footer-text{font-size:12px;color:var(--m);line-height:1.7}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand"><div class="brand-mark">A</div>Art<span>Period</span>™</div>
+  <a href="#start" class="nav-cta">TRY IT FREE</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">FIELD ART INTELLIGENCE</div>
+  <h1>That painting could be<br>worth <em>real money.</em></h1>
+  <p class="hero-sub">Point your phone at any artwork — at an estate sale, a flea market, a thrift store, or hanging in your hallway. Instantly know what it is, what it's worth, and exactly where to sell it.</p>
+  <a href="#start" class="hero-cta">SCAN YOUR FIRST PIECE →</a>
+  <div class="hero-note">Free to try · No account needed · Works on any phone</div>
+</div>
+
+<div class="demo-strip container">
+  <div class="demo-step">
+    <div class="demo-num">01</div>
+    <div class="demo-icon">📸</div>
+    <div class="demo-title">Snap a photo</div>
+    <div class="demo-desc">The piece, the signature, any labels on the back</div>
+  </div>
+  <div class="demo-step">
+    <div class="demo-num">02</div>
+    <div class="demo-icon">🔍</div>
+    <div class="demo-title">We research it</div>
+    <div class="demo-desc">Across museums, auction records & artist databases</div>
+  </div>
+  <div class="demo-step">
+    <div class="demo-num">03</div>
+    <div class="demo-icon">💰</div>
+    <div class="demo-title">Know & sell</div>
+    <div class="demo-desc">Real value range and exactly where to list it</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="section-eyebrow">WHY IT'S DIFFERENT</div>
+    <h2>Google Lens gives up.<br>ArtPeriod digs in.</h2>
+    <p class="section-lead">Generic image search works on famous paintings. It fails completely on the stuff you actually find — unsigned regional oils, old prints, minor listed artists, estate-sale mysteries. That's exactly what we built this for.</p>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon">🎯</div>
+        <h3>Deep identification</h3>
+        <p>Reads signatures, monograms, labels, and stamps. Cross-references museum collections, artist databases, and the Getty's authority files — not just a reverse image lookup.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <h3>Real auction comps</h3>
+        <p>Searches live auction records and sold prices to ground the value in what pieces like yours actually sell for — not a made-up number.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🛡️</div>
+        <h3>Stolen-art check</h3>
+        <p>Cross-references the FBI and INTERPOL stolen-art registries so you don't unknowingly buy or sell a flagged piece.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🏛️</div>
+        <h3>Authentication routing</h3>
+        <p>Tells you exactly who to contact to verify a piece — the right specialists, appraisers, and authentication boards for that artist or era.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📍</div>
+        <h3>Where to sell</h3>
+        <p>Matched to your piece: the right auction house, online platform, or local dealer — with the reasoning for each.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✍️</div>
+        <h3>Instant listings</h3>
+        <p>Generates ready-to-paste sale posts for eBay, Facebook Marketplace, Craigslist, and Instagram — with a suggested price.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="section-eyebrow">BUILT FOR</div>
+    <h2>Treasure hunters of every kind</h2>
+    <div class="who-grid">
+      <div class="who"><div class="who-icon">🏠</div><div class="who-name">Estate Sale Buyers</div><div class="who-desc">Know before you bid</div></div>
+      <div class="who"><div class="who-icon">🔄</div><div class="who-name">Resellers & Flippers</div><div class="who-desc">Buy low, list smart</div></div>
+      <div class="who"><div class="who-icon">🛍️</div><div class="who-name">Thrifters</div><div class="who-desc">Spot the gems</div></div>
+      <div class="who"><div class="who-icon">⚖️</div><div class="who-name">Executors</div><div class="who-desc">Inventory an estate</div></div>
+      <div class="who"><div class="who-icon">🖼️</div><div class="who-name">Collectors</div><div class="who-desc">Research your finds</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="section-eyebrow">HEAD TO HEAD</div>
+    <h2>The honest comparison</h2>
+    <div class="compare">
+      <div class="compare-row head">
+        <div class="compare-cell">Capability</div>
+        <div class="compare-cell us">ArtPeriod</div>
+        <div class="compare-cell them">Google Lens</div>
+      </div>
+      <div class="compare-row"><div class="compare-cell feat">Famous paintings</div><div class="compare-cell us">✓</div><div class="compare-cell them">✓</div></div>
+      <div class="compare-row"><div class="compare-cell feat">Unsigned / regional art</div><div class="compare-cell us">✓</div><div class="compare-cell them">✗</div></div>
+      <div class="compare-row"><div class="compare-cell feat">Real value estimate</div><div class="compare-cell us">✓</div><div class="compare-cell them">✗</div></div>
+      <div class="compare-row"><div class="compare-cell feat">Auction comparables</div><div class="compare-cell us">✓</div><div class="compare-cell them">✗</div></div>
+      <div class="compare-row"><div class="compare-cell feat">Stolen-art check</div><div class="compare-cell us">✓</div><div class="compare-cell them">✗</div></div>
+      <div class="compare-row"><div class="compare-cell feat">Where to sell it</div><div class="compare-cell us">✓</div><div class="compare-cell them">✗</div></div>
+      <div class="compare-row"><div class="compare-cell feat">Listing posts</div><div class="compare-cell us">✓</div><div class="compare-cell them">✗</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-final" id="start">
+  <h2>What's hiding in<br>your <em>next find?</em></h2>
+  <p>Open the app, snap a photo, and find out in seconds.</p>
+  <a href="http://localhost:3000" class="hero-cta">LAUNCH ARTPERIOD →</a>
+  <div class="hero-note">Replace this link with your live app URL once deployed</div>
+</div>
+
+<footer>
+  <div class="footer-brand">Art<span>Period</span>™</div>
+  <div class="footer-text">Field art intelligence for treasure hunters.<br>Values are research estimates, not formal appraisals.</div>
+</footer>
+
+</body>
+</html>
